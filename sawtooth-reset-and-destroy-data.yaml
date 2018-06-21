@@ -1,0 +1,87 @@
+---
+- name: Reset Sawtooth Network
+  hosts: "{{ play_hosts }}"
+  tasks:
+    - name: "Stop sawtooth"
+      service:
+        name: "{{ item }}"
+        state: stopped
+        daemon_reload: yes
+      with_items:
+        - 'sawtooth-block-info-tp'
+        - 'sawtooth-identity-tp'
+        - 'sawtooth-intkey-tp-go'
+        - 'sawtooth-poet-validator-registry-tp'
+        - 'sawtooth-rest-api'
+        - 'sawtooth-settings-tp'
+        - 'sawtooth-smallbank-tp-go'
+        - 'sawtooth-validator'
+        - 'sawtooth-xo-tp-go'
+
+    - name: "Remove packages"
+      apt:
+        name: "{{ item }}"
+        state: absent
+        purge: yes
+      with_items:
+        - 'python3-sawtooth-block-info'
+        - 'python3-sawtooth-cli'
+        - 'python3-sawtooth-ias-client'
+        - 'python3-sawtooth-ias-proxy'
+        - 'python3-sawtooth-identity'
+        - 'python3-sawtooth-intkey'
+        - 'python3-sawtooth-manage'
+        - 'python3-sawtooth-poet-cli'
+        - 'python3-sawtooth-poet-common'
+        - 'python3-sawtooth-poet-core'
+        - 'python3-sawtooth-poet-families'
+        - 'python3-sawtooth-poet-sgx'
+        - 'python3-sawtooth-poet-simulator'
+        - 'python3-sawtooth-rest-api'
+        - 'python3-sawtooth-sdk'
+        - 'python3-sawtooth-settings'
+        - 'python3-sawtooth-signing'
+        - 'python3-sawtooth-validator'
+        - 'python3-sawtooth-xo'
+        - 'sawtooth'
+        - 'sawtooth-intkey-tp-go'
+        - 'sawtooth-noop-tp-go'
+        - 'sawtooth-smallbank-tp-go'
+        - 'sawtooth-xo-tp-go'
+
+    - name: "Remove /var/lib/sawtooth/"
+      file:
+        path: /var/lib/sawtooth
+        state: absent
+
+    - name: "Remove /var/log/sawtooth/"
+      file:
+        path: /var/log/sawtooth
+        state: absent
+
+    - name: "Remove /etc/sawtooth/"
+      file:
+        path: /etc/sawtooth
+        state: absent
+
+    - name: "Remove /home/sawtooth"
+      file:
+        path: "/home/sawtooth/"
+        state: absent
+
+    - name: "daemon reload"
+      command: systemctl daemon-reload
+
+    - name: "Remove sawtooth user"
+      user:
+        name: sawtooth
+        state: absent
+        remove: yes
+
+    - name: "Remove Sawtooth Repo"
+      apt_repository:
+        repo: "deb http://repo.sawtooth.me/{{ sawtooth_repo }} xenial universe"
+        state: absent
+        filename: sawtooth
+        update_cache: yes
+  become: yes

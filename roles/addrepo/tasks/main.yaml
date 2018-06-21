@@ -8,5 +8,5 @@
   apt_repository:
     repo: "deb http://repo.sawtooth.me/{{ sawtooth_repo }} xenial universe"
     state: present
-    filename: sawtooth-lake
+    filename: sawtooth
     update_cache: yes
