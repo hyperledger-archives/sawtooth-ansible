@@ -1,0 +1,18 @@
+[sawtooth_validators]
+node0 ansible_host=192.168.100.10
+node1 ansible_host=192.168.100.11
+node2 ansible_host=192.168.100.12
+node3 ansible_host=192.168.100.13
+node4 ansible_host=192.168.100.14
+node5 ansible_host=192.168.100.15
+
+[sawtooth_rest_api]
+
+[sawtooth_network:children]
+sawtooth_validators
+sawtooth_rest_api
+
+[all:vars]
+ansible_user=sawtooth-deploy
+ansible_port=22
+ansible_python_interpreter=/usr/bin/python3
