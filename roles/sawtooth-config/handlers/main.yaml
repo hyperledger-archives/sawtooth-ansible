@@ -1,0 +1,7 @@
+---
+- name: "start sawtooth-tp_config"
+  systemd:
+    state: restarted
+    enabled: True
+    daemon_reload: yes
+    name: sawtooth-tp_config

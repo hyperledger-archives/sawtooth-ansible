@@ -1,0 +1,9 @@
+---
+- name: "Install sawtooth-xo-tp-go"
+  apt:
+    pkg=sawtooth-xo-tp-go
+    state=present
+    update_cache=true
+  notify:
+    - start sawtooth-xo-tp-go
+  become: yes

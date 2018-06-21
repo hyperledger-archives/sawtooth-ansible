@@ -1,0 +1,12 @@
+---
+- name: "Download Sawtooth Repo Key"
+  apt_key:
+    keyserver: keyserver.ubuntu.com
+    id: "{{ sawtooth_repo_key }}"
+
+- name: "Add Sawtooth Repo"
+  apt_repository:
+    repo: "deb http://repo.sawtooth.me/{{ sawtooth_repo }} xenial universe"
+    state: present
+    filename: sawtooth-lake
+    update_cache: yes

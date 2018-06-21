@@ -1,0 +1,53 @@
+#
+# Copyright 2017 Intel Corporation
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ------------------------------------------------------------------------------
+
+#
+# Sawtooth -- REST API Configuration
+#
+
+# The port and host for the api to run on
+bind = ["{{ api_endpoint }}"]
+
+# The url to connect to a running Validator
+connect = "tcp://localhost:4004"
+
+# Seconds to wait for a validator response
+#   timeout = 300
+
+# The host and port for Open TSDB database used for metrics
+{% if influx_url is defined %}
+opentsdb_url = "{{ influx_url }}"
+{%else %}
+# opentsdb_url = ""
+{% endif %}
+
+# The name of the database used for storing metrics
+{% if influx_database is defined %}
+opentsdb_db = "{{ influx_database }}"
+{%else %}
+# opentsdb_db = ""
+{% endif %}
+
+{% if influx_username is defined %}
+opentsdb_username = "{{ influx_username }}"
+{%else %}
+# opentsdb_username = ""
+{% endif %}
+{% if influx_password is defined %}
+opentsdb_password = "{{ influx_password }}"
+{%else %}
+# opentsdb_password = ""
+{% endif %}

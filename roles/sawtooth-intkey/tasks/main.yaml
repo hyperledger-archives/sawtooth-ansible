@@ -1,0 +1,7 @@
+---
+- name: "Install sawtooth-intkey"
+  apt:
+    pkg=python3-sawtooth-intkey
+    state=present
+    update_cache=true
+  become: yes

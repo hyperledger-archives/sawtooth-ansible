@@ -1,0 +1,78 @@
+---
+- name: "Copy Network keys"
+  copy:
+    src: keys/{{ network_name }}/networkkeys
+    dest: /tmp/networkkeys
+    remote_src: no
+  become: yes
+
+- name: "Copy Transactor keys"
+  copy:
+    src: keys/{{ network_name }}/transactorkeys
+    dest: /tmp/transactorkeys
+    remote_src: no
+  become: yes
+
+- name: "Set Role Key"
+  shell:
+     sawset proposal create --key /etc/sawtooth/keys/validator.priv --url http://{{ api_endpoint }}
+     sawtooth.identity.allowed_keys=$(cat /home/sawtooth/.sawtooth/keys/sawtooth.pub)
+  args:
+    creates: "/home/sawtooth/.sawtooth/onchain-configured"
+  become: yes
+  become_user: sawtooth
+
+- name: "Create Transaction Access Policy"
+  shell:
+     echo sawtooth identity policy create policy_1 "$(cat /tmp/transactorkeys)"
+     {% if workload_pub_key is defined %}
+     \"PERMIT_KEY {{ workload_pub_key }}\"
+     {% endif %}
+     \"DENY_KEY *\" --wait 300 --url http://{{ api_endpoint }} >/tmp/transactionpolicy.sh
+  become: yes
+  become_user: sawtooth
+
+- name: "Create Network Access Policy"
+  shell:
+    echo sawtooth identity policy create policy_2 "$(cat /tmp/networkkeys)"  \"DENY_KEY *\" --wait 300
+    --url http://{{ api_endpoint }} >/tmp/networkpolicy.sh
+  args:
+    creates: "/home/sawtooth/.sawtooth/onchain-configured"
+  become: yes
+  become_user: sawtooth
+
+- name: "Apply Transaction Access Policy"
+  shell: sh /tmp/transactionpolicy.sh
+  args:
+    creates: "/home/sawtooth/.sawtooth/onchain-configured"
+  become: yes
+  become_user: sawtooth
+
+- name: "Apply Network Access Policy"
+  shell: sh /tmp/networkpolicy.sh
+  args:
+    creates: "/home/sawtooth/.sawtooth/onchain-configured"
+  become: yes
+  become_user: sawtooth
+
+- name: "Create Identity Role"
+  shell: sawtooth identity role create transactor policy_1 --wait 300 --url http://{{ api_endpoint }}
+  args:
+    creates: "/home/sawtooth/.sawtooth/onchain-configured"
+  become: yes
+  become_user: sawtooth
+
+- name: "Create Network Role"
+  shell: sawtooth identity role create network policy_2 --wait 300 --url http://{{ api_endpoint }}
+  args:
+    creates: "/home/sawtooth/.sawtooth/onchain-configured"
+  become: yes
+  become_user: sawtooth
+
+- name: "Create onchain-configured"
+  file:
+    path: /home/sawtooth/.sawtooth/onchain-configured
+    state: touch
+  become: yes
+  become_user: sawtooth
+
