@@ -1,0 +1,59 @@
+# This file provides quick access to several configuration options
+# used while deploying Sawtooth networks. For more information see
+# https://sawtooth.hyperledger.org/docs/core/releases/latest/sysadmin_guide/configuring_sawtooth.html
+
+network_name: testnet1
+
+###### Repository configuration ######
+
+# To install the sawtooth 1.0 stable packages uncomment these lines
+sawtooth_repo: 'ubuntu/1.0/stable'
+sawtooth_repo_key: '8AA7AF1F1091A5FD'
+
+# To install the sawtooth nightly packages uncomment these lines
+#sawtooth_repo: 'ubuntu/nightly'
+#sawtooth_repo_key: '44FC67F19B2466EA'
+
+###### Sawtooth configuration ######
+
+# Typically this would be localhost with a reverse proxy and auth in front of
+# it, but with the correct firewall settings this may also be externally facing
+#api_endpoint: 'localhost:8008'
+api_endpoint: '{{ ansible_default_ipv4.address }}:8008'
+
+# Enclave options. Valid choices are 'sim' or 'sgx'
+# enclave: 'sgx'
+enclave: 'sim'
+
+# Options are dynamic or static.
+peering_mode: 'dynamic'
+
+# Options are serial or parallel
+scheduler: 'parallel'
+
+# Network encryption keys
+network_public_key: 'wFMwoOt>yFqI/ek.G[tfMMILHWw#vXB[Sv}>l>i)'
+network_private_key: 'r&oJ5aQDj4+V]p2:Lz70Eu0x#m%IwzBdP(}&hWM*'
+
+# Workload public key
+workload_pub_key: ''
+
+###### Logging Options ######
+
+# Max log file size
+maxbytes: 50000000
+# Number of files to keep
+backupcount: 20
+
+###### SGX configuration ######
+
+# spid: 'DEADBEEF00000000DEADBEEF00000000'
+# spid_cert_file: 'sgx-certificate.pem'
+
+###### Monitoring configuration ######
+
+# Information about the influx db where stats will be sent.
+# influx_url: https://influxdb:8087
+# influx_database: metrics
+# influx_username:
+# influx_password:
