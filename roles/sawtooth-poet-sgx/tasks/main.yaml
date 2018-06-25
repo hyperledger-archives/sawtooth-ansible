@@ -1,0 +1,41 @@
+---
+- name: "Install sawtooth-poet"
+  apt:
+    pkg=python3-sawtooth-poet-cli
+    state=present
+    update_cache=true
+  become: yes
+
+- name: "Install sawtooth-poet-families"
+  apt:
+    pkg=python3-sawtooth-poet-families
+    state=present
+    update_cache=true
+  notify:
+    - start sawtooth-poet-validator-registry-tp
+  become: yes
+
+- name: "Install sawtooth-poet-sgx"
+  apt:
+    pkg=python3-sawtooth-poet-sgx
+    state=present
+    update_cache=true
+
+- name: "Copy poet config"
+  template:
+    src: poet_enclave_sgx.toml.j2
+    dest: /etc/sawtooth/poet_enclave_sgx.toml
+    owner: root
+    group: sawtooth
+    mode: 0640
+
+- name: "Copy poet cert"
+  copy:
+    src: "{{ spid_cert_file }}"
+    dest: "/etc/sawtooth/{{ spid_cert_file }}"
+    owner: root
+    group: sawtooth
+    mode: 0640
+
+- name: "Verify SGX"
+  command: poet enclave --enclave-module sgx measurement

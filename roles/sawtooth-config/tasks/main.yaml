@@ -1,0 +1,9 @@
+---
+- name: "Install sawtooth-config"
+  apt:
+    pkg=python3-sawtooth-config
+    state=present
+    update_cache=true
+  notify:
+    - start sawtooth-tp_config
+  become: yes

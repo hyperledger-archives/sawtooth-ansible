@@ -1,0 +1,5 @@
+---
+dependencies:
+  - { role: addrepo }
+  - { role: sawtooth-cli }
+  - { role: sawtooth-poet-sim }

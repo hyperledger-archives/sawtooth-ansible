@@ -1,0 +1,9 @@
+---
+- name: "Install sawtooth-smallbank-tp-go"
+  apt:
+    pkg=sawtooth-smallbank-tp-go
+    state=present
+    update_cache=true
+  notify:
+    - start sawtooth-smallbank-tp-go
+  become: yes

@@ -1,0 +1,22 @@
+---
+- name: "Install sawtooth-poet"
+  apt:
+    pkg=python3-sawtooth-poet-cli
+    state=present
+    update_cache=true
+  become: yes
+
+- name: "Install sawtooth-poet-families"
+  apt:
+    pkg=python3-sawtooth-poet-families
+    state=present
+    update_cache=true
+  notify:
+    - start sawtooth-poet-validator-registry-tp
+  become: yes
+
+- name: "Install sawtooth-poet-simulator"
+  apt:
+    pkg=python3-sawtooth-poet-simulator
+    state=present
+    update_cache=true

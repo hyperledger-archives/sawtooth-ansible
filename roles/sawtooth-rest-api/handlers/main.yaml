@@ -1,0 +1,7 @@
+---
+- name: "start sawtooth-rest-api"
+  systemd:
+    state: restarted
+    enabled: True
+    daemon_reload: yes
+    name: sawtooth-rest-api

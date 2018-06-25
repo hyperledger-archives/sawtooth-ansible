@@ -1,0 +1,28 @@
+---
+- name: "Fetch Network Private Key"
+  fetch:
+    src: /etc/sawtooth/keys/validator.priv
+    dest: keys/{{ network_name }}/network/{{ ansible_host }}/validator.priv
+    flat: yes
+    validate_checksum: yes
+
+- name: "Fetch Network Public Key"
+  fetch:
+    src: /etc/sawtooth/keys/validator.pub
+    dest: keys/{{ network_name }}/network/{{ ansible_host }}/validator.pub
+    flat: yes
+    validate_checksum: yes
+
+- name: "Fetch Transactor Private Key"
+  fetch:
+    src: /home/sawtooth/.sawtooth/keys/sawtooth.priv
+    dest: keys/{{ network_name }}/transactor/{{ ansible_host }}/validator.priv
+    flat: yes
+    validate_checksum: yes
+
+- name: "Fetch Transactor Public Key"
+  fetch:
+    src: /home/sawtooth/.sawtooth/keys/sawtooth.pub
+    dest: keys/{{ network_name }}/transactor/{{ ansible_host }}/validator.pub
+    flat: yes
+    validate_checksum: yes
