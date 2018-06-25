@@ -1,0 +1,9 @@
+---
+- name: "Install sawtooth-block-info"
+  apt:
+    pkg=python3-sawtooth-block-info
+    state=present
+    update_cache=true
+  notify:
+    - start sawtooth-block-info
+  become: yes

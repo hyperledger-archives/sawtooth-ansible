@@ -1,0 +1,26 @@
+---
+- hosts: "{{ play_hosts }}"
+  roles:
+    - sawtooth-block-info
+    - sawtooth-identity
+    - sawtooth-intkey-tp-go
+    - "sawtooth-poet-{{ enclave }}"
+    - sawtooth-rest-api
+    - sawtooth-settings
+    - sawtooth-smallbank-tp-go
+    - sawtooth-validator
+    - sawtooth-xo-tp-go
+  become: yes
+
+- hosts: "{{ play_hosts[0] }}"
+  roles:
+    - "create-genesis-{{ enclave }}"
+  become: yes
+
+- hosts: "{{ play_hosts }}"
+  roles:
+    - restart-sawtooth-validator
+  become: yes
+
+- name: "Configure onchain permissions"
+  import_playbook: sawtooth-onchain-permissions.yaml

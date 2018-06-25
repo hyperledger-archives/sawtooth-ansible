@@ -1,0 +1,9 @@
+---
+- name: "Install sawtooth-identity"
+  apt:
+    pkg=python3-sawtooth-identity
+    state=present
+    update_cache=true
+  notify:
+    - start sawtooth-identity
+  become: yes

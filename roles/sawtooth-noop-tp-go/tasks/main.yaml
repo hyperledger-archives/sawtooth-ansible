@@ -1,0 +1,9 @@
+---
+- name: "Install sawtooth-noop-tp-go"
+  apt:
+    pkg=sawtooth-noop-tp-go
+    state=present
+    update_cache=true
+  notify:
+    - start sawtooth-noop-tp-go
+  become: yes

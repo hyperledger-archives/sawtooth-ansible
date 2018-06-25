@@ -1,0 +1,55 @@
+---
+- name: "Create Config Genesis Batch"
+  command: "sawset genesis -k /etc/sawtooth/keys/validator.priv -o /home/sawtooth/config-genesis.batch"
+  args:
+    creates: "/home/sawtooth/config-genesis.batch"
+  become: yes
+  become_user: sawtooth
+
+- name: "Set Consensus Algorithm"
+  shell: >
+          sawset proposal create -k /etc/sawtooth/keys/validator.priv
+          sawtooth.consensus.algorithm=poet
+          sawtooth.poet.report_public_key_pem="$(cat /etc/sawtooth/simulator_rk_pub.pem)"
+          sawtooth.poet.valid_enclave_measurements=$(poet enclave measurement)
+          sawtooth.poet.valid_enclave_basenames=$(poet enclave basename)
+          -o /home/sawtooth/config.batch
+  args:
+    creates: "/home/sawtooth/config.batch"
+  become: yes
+  become_user: sawtooth
+
+- name: "PoET Settings"
+  shell: >
+          sawset proposal create -k /etc/sawtooth/keys/validator.priv
+          sawtooth.poet.target_wait_time=30
+          sawtooth.poet.initial_wait_time=300
+          sawtooth.publisher.max_batches_per_block=500
+          sawtooth.poet.ztest_minimum_win_count=10000
+          sawtooth.poet.key_block_claim_limit=100000
+          -o /home/sawtooth/poet_setting.batch
+  args:
+    creates: "/home/sawtooth/poet_setting.batch"
+  become: yes
+  become_user: sawtooth
+
+- name: "Create Poet Genesis Batch"
+  command: "poet registration create -k /etc/sawtooth/keys/validator.priv -o /home/sawtooth/poet.batch"
+  args:
+    creates: "/home/sawtooth/poet.batch"
+  become: yes
+  become_user: sawtooth
+
+- name: "Run Sawtooth Genesis"
+  shell: "sawadm genesis /home/sawtooth/config-genesis.batch /home/sawtooth/config.batch /home/sawtooth/poet.batch /home/sawtooth/poet_setting.batch && cp /var/lib/sawtooth/genesis.batch /home/sawtooth/genesis.batch"
+  args:
+    creates: "/home/sawtooth/genesis.batch"
+  become: yes
+  become_user: sawtooth
+
+- name: "Generate User Keys"
+  shell: "sawtooth keygen"
+  args:
+    creates: "/home/sawtooth/.sawtooth/keys/sawtooth.priv"
+  become: yes
+  become_user: sawtooth

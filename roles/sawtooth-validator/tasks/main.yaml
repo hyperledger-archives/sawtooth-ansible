@@ -1,0 +1,36 @@
+---
+- name: "Install sawtooth-validator"
+  apt:
+    pkg=python3-sawtooth-validator
+    state=present
+    update_cache=true
+  become: yes
+
+- name: "Configure sawtooth-validator"
+  template:
+    src: "validator.toml.j2"
+    dest: "/etc/sawtooth/validator.toml"
+    owner: root
+    group: sawtooth
+  become: yes
+
+- name: "Configure Sawtooth logger"
+  template:
+    src: "log_config.toml.j2"
+    dest: "/etc/sawtooth/log_config.toml"
+  become: yes
+
+- name: "Generate User Keys"
+  shell: "sawtooth keygen"
+  args:
+    creates: "/home/sawtooth/.sawtooth/keys/sawtooth.priv"
+  become: yes
+  become_user: sawtooth
+
+- name: "Generate validator keypairs"
+  command: "sawadm keygen"
+  args:
+    creates: "/etc/sawtooth/keys/validator.priv"
+  notify:
+    - start sawtooth-validator
+  become: yes
