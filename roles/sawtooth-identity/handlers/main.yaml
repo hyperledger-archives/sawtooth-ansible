@@ -1,0 +1,7 @@
+---
+- name: "start sawtooth-identity"
+  systemd:
+    state: restarted
+    enabled: True
+    daemon_reload: yes
+    name: sawtooth-identity-tp

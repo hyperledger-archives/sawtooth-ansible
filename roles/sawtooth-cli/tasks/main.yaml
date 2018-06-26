@@ -1,0 +1,14 @@
+---
+- name: "Install sawtooth-cli"
+  apt:
+    pkg=python3-sawtooth-cli
+    state=present
+    update_cache=true
+  become: yes
+
+- name: "Configure sawtooth-cli"
+  template:
+    src: "cli.toml.j2"
+    dest: "/etc/sawtooth/cli.toml"
+  become: yes
+

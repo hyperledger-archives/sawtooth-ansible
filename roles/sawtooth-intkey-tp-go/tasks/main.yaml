@@ -1,0 +1,9 @@
+---
+- name: "Install sawtooth-intkey-tp-go"
+  apt:
+    pkg=sawtooth-intkey-tp-go
+    state=present
+    update_cache=true
+  notify:
+    - start sawtooth-intkey-tp-go
+  become: yes

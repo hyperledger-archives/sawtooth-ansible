@@ -1,0 +1,16 @@
+---
+- name: "Install sawtooth-rest-apt"
+  apt:
+    pkg=python3-sawtooth-rest-api
+    state=present
+    update_cache=true
+
+- name: "Configure sawtooth-validator"
+  template:
+    src: "rest_api.toml.j2"
+    dest: "/etc/sawtooth/rest_api.toml"
+    owner: root
+    group: sawtooth
+  become: yes
+  notify:
+    - start sawtooth-rest-api

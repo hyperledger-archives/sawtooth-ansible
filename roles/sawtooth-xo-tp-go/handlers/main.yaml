@@ -1,0 +1,7 @@
+---
+- name: "start sawtooth-xo-tp-go"
+  systemd:
+    state: restarted
+    enabled: True
+    daemon_reload: yes
+    name: sawtooth-xo-tp-go

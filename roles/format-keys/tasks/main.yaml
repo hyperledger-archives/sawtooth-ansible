@@ -1,0 +1,6 @@
+---
+- name: "Format Network Keys"
+  shell: for key in keys/{{ network_name }}/network/*/*.pub; do echo \"PERMIT_KEY $(cat $key)\";done | tr '\n' ' ' > keys/{{ network_name }}/networkkeys
+
+- name: "Format Transactor Keys"
+  shell: for key in keys/{{ network_name }}/transactor/*/*.pub; do echo \"PERMIT_KEY $(cat $key)\";done | tr '\n' ' ' > keys/{{ network_name }}/transactorkeys

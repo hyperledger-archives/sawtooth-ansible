@@ -1,0 +1,7 @@
+---
+- name: "start sawtooth-poet-validator-registry-tp"
+  systemd:
+    state: restarted
+    enabled: True
+    daemon_reload: yes
+    name: sawtooth-poet-validator-registry-tp

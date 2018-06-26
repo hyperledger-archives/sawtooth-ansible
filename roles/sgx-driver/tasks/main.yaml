@@ -1,0 +1,89 @@
+---
+- name: "Install SGX prereqs"
+  apt:
+    name: "{{ item }}"
+    update_cache: yes
+  with_items:
+    - alien
+    - autoconf
+    - automake
+    - build-essential
+    - cmake
+    - libcurl4-openssl-dev
+    - libprotobuf-dev
+    - libssl-dev
+    - libtool
+    - libxml2-dev
+    - ocaml
+    - pkg-config
+    - protobuf-compiler
+    - python
+    - unzip
+    - uuid-dev
+    - wget
+
+- name: "Create SGX download directory"
+  file:
+    state: directory
+    path: /tmp/sgx
+
+- name: "Create JHI download directory"
+  file:
+    state: directory
+    path: /tmp/sgx/dynamic-application-loader-host-interface-master
+
+- name: "Download SGX driver"
+  get_url:
+    url: https://download.01.org/intel-sgx/linux-2.0/sgx_linux_x64_driver_eb61a95.bin
+    dest: /tmp/sgx/sgx_linux_x64_driver_eb61a95.bin
+    mode: 0755
+
+- name: "Download icls client"
+  get_url:
+    url: http://registrationcenter-download.intel.com/akdlm/irc_nas/11414/iclsClient-1.45.449.12-1.x86_64.rpm
+    dest: /tmp/sgx/iclsClient-1.45.449.12-1.x86_64.rpm
+    mode: 0755
+
+- name: "Download JHI"
+  unarchive:
+    src: https://github.com/01org/dynamic-application-loader-host-interface/archive/master.zip
+    dest: /tmp/sgx/
+    remote_src: yes
+
+- name: "Download SGX PSW"
+  get_url:
+    url: https://download.01.org/intel-sgx/linux-2.0/sgx_linux_ubuntu16.04.1_x64_psw_2.0.100.40950.bin
+    dest: /tmp/sgx/sgx_linux_ubuntu16.04.1_x64_psw_2.0.100.40950.bin
+    mode: 0755
+
+- name: "Install SGX driver"
+  command: ./sgx_linux_x64_driver_eb61a95.bin
+  args:
+    chdir: /tmp/sgx
+
+- name: "Convert icls client"
+  command: alien --scripts iclsClient-1.45.449.12-1.x86_64.rpm
+  args:
+    chdir: /tmp/sgx
+
+- name: "Install icls client"
+  command: dpkg -i iclsclient_1.45.449.12-2_amd64.deb
+  args:
+    chdir: /tmp/sgx
+
+- name: "Install JHI"
+  command: "{{ item }}"
+  with_items:
+    - cmake .
+    - make
+    - make install
+    - systemctl enable jhi
+  args:
+    chdir: /tmp/sgx/dynamic-application-loader-host-interface-master
+
+- name: "Install PSW"
+  command: ./sgx_linux_ubuntu16.04.1_x64_psw_2.0.100.40950.bin
+  args:
+    chdir: /tmp/sgx
+    creates: /opt/intel/sgxpsw/uninstall.sh
+
