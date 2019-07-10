@@ -1,3 +1,6 @@
+## Maintainers
+
+### Active Maintainers
 | Name | GitHub | RocketChat |
 | --- | --- | --- |
 | Adam Ludvik | aludvik | adamludvik |
@@ -8,3 +11,8 @@
 | Richard Berg | rberg2 | rberg2
 | Ryan Beck-Buysse | rbuysse | rbuysse
 | Shawn Amundson | vaporos | amundson |
+
+### Retired Maintainers
+| Name | GitHub | RocketChat |
+| --- | --- | --- |
+| Adam Ludvik | aludvik | adamludvik |
