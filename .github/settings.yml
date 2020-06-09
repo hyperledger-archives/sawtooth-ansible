@@ -1,0 +1,9 @@
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+repository:
+  name: sawtooth-ansible
+  description: Archive of sawtooth-ansible: Code moved to sawtooth-contrib
+  archived: true
+  private: false
